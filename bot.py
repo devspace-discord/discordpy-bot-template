@@ -82,7 +82,13 @@ logging.basicConfig(
 bot.config = CONFIG
 
 bot.cog_list = [
-
+    'cogs.core.database',
+    'cogs.core.settings',
+    'cogs.commands.commands',
+    'cogs.commands.events',
+    'cogs.commands.moderation',
+    'cogs.commands.owner',
+    'cogs.commands.utility'
 ]
 
 for cog in bot.cog_list:
