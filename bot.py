@@ -10,9 +10,6 @@ basic initialization and configuration of the bot
 import os
 import json
 import dotenv
-import asyncio
-import asyncpg
-import discord
 import logging
 from discord.ext import commands
 
@@ -32,52 +29,16 @@ with open('data/config.json') as CONFIG:
     CONFIG = json.load(CONFIG)
 
 
-async def get_prefix(bot: commands.Bot, message: discord.Message):
-    """Fetches the custom prefix for the provided guild."""
-
-    if not message.guild:
-        return CONFIG['defaultPrefix']
-
-    guild_id = message.guild.id
-
-    prefix = await bot.db.fetchrow(
-        "select prefix from guilds where guild_id = $1",
-        guild_id
-    )
-
-    if not prefix:
-        async with bot.db.acquire() as conn:
-            await conn.execute("insert into guilds (guild_id, prefix) values ($1, $2)",
-                               guild_id, CONFIG['defaultPrefix'])
-        return CONFIG["defaultPrefix"]
-
-    return prefix[0]
-
-
 bot = commands.AutoShardedBot(
-    command_prefix=get_prefix,
+    command_prefix=CONFIG['defaultPrefix'],
     case_insensitive=True
 )
-
-
-async def database_setup():
-    """Creates a database pool connection."""
-
-    bot.db = await asyncpg.create_pool(
-        user=USER,
-        password=PASSWORD,
-        database=NAME,
-        host=HOSTNAME
-    )
-
-asyncio.get_event_loop().run_until_complete(database_setup())
 
 
 logging.basicConfig(
     filename='discord.log',
     level=logging.INFO
 )
-
 
 bot.config = CONFIG
 
