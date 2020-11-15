@@ -2,7 +2,7 @@
 This is a simple discord bot template that you can use if you're new to discord bot development or just want the base code ready to go
 
 ## Requirements
-- Python > 3.6
+- Python > 3.8
 - Git
 - Pip
 
